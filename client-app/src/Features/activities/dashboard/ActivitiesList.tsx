@@ -1,17 +1,21 @@
-import React from "react";
+import React, { SyntheticEvent } from "react";
 import { Item, Button, Label, Segment } from "semantic-ui-react";
 import { IActivity } from "../../../App/models/activity";
 
 interface IProps {
   activities: IActivity[];
   selectActivity: (id: string) => void;
-  deleteActivity:(id:string) => void;
+  deleteActivity:(e:SyntheticEvent<HTMLButtonElement> ,id:string) => void;
+  submitting:boolean;
+  task:string;
 }
 
 export const ActivitiesList: React.FC<IProps> = ({
   activities,
   selectActivity,
-  deleteActivity
+  deleteActivity,
+  submitting,
+  task
 }) => {
   return (
     <Segment clearing>
@@ -36,8 +40,10 @@ export const ActivitiesList: React.FC<IProps> = ({
                   color="blue"
                 />
                 <Button
-                  onClick={() => {
-                    deleteActivity(activity.id);
+                  name={activity.id}
+                  loading={task===activity.id && submitting}
+                  onClick={(e) => {
+                    deleteActivity(e,activity.id);
                   }}
                   content="Delete"
                   floated="right"
