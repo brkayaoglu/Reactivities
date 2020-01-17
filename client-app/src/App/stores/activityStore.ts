@@ -12,16 +12,31 @@ class ActivityStore {
 
   @observable selectedActivity: IActivity | null = null;
 
-
   @observable submitting = false;
 
   @observable targetButton = "";
 
   @computed get activitiesByDate() {
-    return Array.from(this.activitiesRegistry.values()).sort(
-      (a, b) => Date.parse(a.date) - Date.parse(b.date)
+    return this.groupActivitiesByDate(
+      Array.from(this.activitiesRegistry.values())
     );
   }
+
+  groupActivitiesByDate = (activities: IActivity[]) => {
+    const sortedActivities = activities.sort(
+      (a, b) => Date.parse(a.date) - Date.parse(b.date)
+    );
+
+    return Object.entries(
+      sortedActivities.reduce((activities, activity) => {
+        const date = activity.date.split("T")[0];
+        activities[date] = activities[date]
+          ? [...activities[date], activity]
+          : [activity];
+        return activities;
+      }, {} as { [key: string]: IActivity[] })
+    );
+  };
 
   @action clearActivity = () => {
     this.selectedActivity = null;
@@ -38,10 +53,12 @@ class ActivityStore {
         });
         this.initialLoad = false;
       });
+      console.log(this.groupActivitiesByDate(activities));
     } catch (error) {
       runInAction("load activities error", () => {
         this.initialLoad = false;
       });
+
       console.log(error);
     }
   };
