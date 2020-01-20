@@ -3,15 +3,19 @@ import ReactDOM from "react-dom";
 import "./App/Layout/styles.css";
 import App from "./App/Layout/App";
 import * as serviceWorker from "./serviceWorker";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
+import {createBrowserHistory} from 'history'
 import ScrollComponent from "./App/Layout/scrollComponent/ScrollComponent";
+import 'react-toastify/dist/ReactToastify.min.css'
+
+export const history = createBrowserHistory();
 
 ReactDOM.render(
-  <BrowserRouter>
+  <Router history={history}>
     <ScrollComponent>
       <App />
     </ScrollComponent>
-  </BrowserRouter>,
+  </Router>,
   document.getElementById("root")
 );
 

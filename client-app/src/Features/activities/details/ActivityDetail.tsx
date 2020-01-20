@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Card, Image, ButtonGroup, Button, Grid, GridColumn } from "semantic-ui-react";
+import { Grid, GridColumn } from "semantic-ui-react";
 import ActivityStore from "../../../App/stores/activityStore";
 import { observer } from "mobx-react-lite";
 import { RouteComponentProps, Link } from "react-router-dom";
@@ -23,9 +23,13 @@ const ActivityDetail: React.FC<RouteComponentProps<DetailParams>> = ({match,hist
 
   useEffect(() => {
     loadActivity(match.params.id)
-  }, [loadActivity, match.params.id])
+  }, [loadActivity, match.params.id,history])
 
-  if(initialLoad || !activity) return <LoadingComponent content="Loading activity..." />
+  if(initialLoad) return <LoadingComponent content="Loading activity..." />
+
+  if(!activity){
+    return <h2>Activity not found</h2>
+  }
   return (
     <Grid>
       <Grid.Column width={10}>
@@ -37,37 +41,6 @@ const ActivityDetail: React.FC<RouteComponentProps<DetailParams>> = ({match,hist
         <ActivityDetailedSideBar></ActivityDetailedSideBar>
       </GridColumn>
     </Grid>
-    // <Card fluid>
-    //   <Image
-    //     src={`/assets/categoryImages/${activity!.category}.jpg`}
-    //     wrapped
-    //     ui={false}
-    //   />
-    //   <Card.Content>
-    //     <Card.Header>{activity!.title}</Card.Header>
-    //     <Card.Meta>
-    //       <span className="date">{activity!.date}</span>
-    //     </Card.Meta>
-    //     <Card.Description>{activity!.description}</Card.Description>
-    //   </Card.Content>
-    //   <Card.Content extra>
-    //     <ButtonGroup widths={2}>
-    //       <Button
-            
-    //         as={Link} to={`/manage/${activity.id}`}
-    //         basic
-    //         color="blue"
-    //         content="Edit"
-    //       />
-    //       <Button
-    //         onClick={() => history.push('/activities')}
-    //         basic
-    //         color="red"
-    //         content="Cancel"
-    //       />
-    //     </ButtonGroup>
-    //   </Card.Content>
-    // </Card>
   );
 };
 
