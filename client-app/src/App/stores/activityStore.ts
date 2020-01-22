@@ -1,13 +1,17 @@
-import { observable, action, computed, configure, runInAction } from "mobx";
-import { createContext, SyntheticEvent } from "react";
+import { observable, action, computed, runInAction } from "mobx";
+import { SyntheticEvent } from "react";
 import { IActivity } from "../models/activity";
 import agent from "../api/agent";
-import {history} from '../..'
+import { history } from "../..";
 import { toast } from "react-toastify";
+import { RootStore } from "./rootStore";
 
-configure({ enforceActions: "always" });
+export default class ActivityStore {
+  rootStore: RootStore;
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
+  }
 
-class ActivityStore {
   @observable activitiesRegistry = new Map(); // new activities array form
 
   @observable initialLoad = false;
@@ -50,7 +54,7 @@ class ActivityStore {
       const activities = await agent.Activities.list();
       runInAction("load activities", () => {
         Object.values(activities).forEach(activity => {
-          activity.date = new Date(activity.date)
+          activity.date = new Date(activity.date);
           this.activitiesRegistry.set(activity.id, activity);
         });
         this.initialLoad = false;
@@ -67,14 +71,15 @@ class ActivityStore {
 
   @action loadActivity = async (id: string) => {
     let activity = this.getLoadActivity(id);
-    if (activity) {this.selectedActivity = activity;
-    return activity;}
-    else {
+    if (activity) {
+      this.selectedActivity = activity;
+      return activity;
+    } else {
       this.initialLoad = true;
       try {
         activity = await agent.Activities.details(id);
         runInAction("getting activities", () => {
-          activity.date = new Date(activity.date)
+          activity.date = new Date(activity.date);
           this.selectedActivity = activity;
           this.activitiesRegistry.set(activity.id, activity);
           this.initialLoad = false;
@@ -84,7 +89,7 @@ class ActivityStore {
         runInAction("getting activity error", () => {
           this.initialLoad = false;
         });
-      } 
+      }
     }
   };
 
@@ -110,7 +115,7 @@ class ActivityStore {
         this.submitting = false;
         this.selectedActivity = activity;
       });
-      history.push(`/activities/${activity.id}`)
+      history.push(`/activities/${activity.id}`);
     } catch (error) {
       runInAction("create activities error", () => {
         this.submitting = false;
@@ -130,7 +135,7 @@ class ActivityStore {
         this.submitting = false;
         this.selectedActivity = activity;
       });
-      history.push(`/activities/${activity.id}`)
+      history.push(`/activities/${activity.id}`);
     } catch (error) {
       runInAction("edit activities error", () => {
         this.submitting = false;
@@ -164,5 +169,3 @@ class ActivityStore {
     }
   };
 }
-
-export default createContext(new ActivityStore());

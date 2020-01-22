@@ -1,5 +1,5 @@
 import React from 'react'
-import { Segment, Item, Header, Button, Image, ItemHeader } from 'semantic-ui-react'
+import { Segment, Item, Header, Button, Image } from 'semantic-ui-react'
 import { IActivity } from '../../../App/models/activity';
 import { observer } from 'mobx-react-lite';
 import { Link } from 'react-router-dom';

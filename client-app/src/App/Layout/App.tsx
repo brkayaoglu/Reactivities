@@ -1,4 +1,4 @@
-import React, { Fragment } from "react"; //Fragments prevents siblings
+import React, { Fragment, useContext, useEffect } from "react"; //Fragments prevents siblings
 import { Container } from "semantic-ui-react";
 import { Navbar } from "../../Features/nav/Navbar";
 import ActivitiesDashboard from "../../Features/activities/dashboard/ActivitiesDashboard";
@@ -14,10 +14,31 @@ import ActivityForm from "../../Features/activities/form/ActivityForm";
 import ActivityDetail from "../../Features/activities/details/ActivityDetail";
 import NotFound from "./NotFound";
 import { ToastContainer } from "react-toastify";
+import { LoginForm } from "../../Features/user/LoginForm";
+import { RootStoreContext } from "../stores/rootStore";
+import LoadingComponent from "./Loadingcomponent/LoadingComponent";
+import ModalContainer from '../common/modals/ModalContainer'
 
 const App: React.FC<RouteComponentProps> = ({ location }) => {
+
+  const roortStore = useContext(RootStoreContext);
+  const {setAppLoaded, token, appLoaded } = roortStore.commonStore;
+
+  const {getUser} = roortStore.userStore;
+
+  useEffect(() => {
+    if(token) {
+      getUser().finally(()=> setAppLoaded());
+    } else {
+      setAppLoaded();
+    }
+  }, [getUser, setAppLoaded, token]);
+
+  if(!appLoaded) return <LoadingComponent content='Loading app..' />
+
   return (
     <Fragment>
+      <ModalContainer/>
       <ToastContainer position="bottom-right" />
       <Route exact path="/" component={HomePage} />
       <Route
@@ -38,6 +59,7 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
                   path={["/createactivity", "/manage/:id"]}
                   component={ActivityForm}
                 />
+                <Route path="/login" component={LoginForm} />
                 <Route component={NotFound} />
               </Switch>
             </Container>

@@ -1,18 +1,14 @@
 import React, { useContext, Fragment } from "react";
-import { Item, Button, Label, Segment } from "semantic-ui-react";
+import { Item, Label } from "semantic-ui-react";
 import { observer } from "mobx-react-lite";
-import ActivityStore from "../../../App/stores/activityStore";
-import { Link } from "react-router-dom";
 import { ActivityListItem } from "./ActivityListItem";
+import { RootStoreContext } from "../../../App/stores/rootStore";
 
 const ActivitiesList: React.FC = () => {
-  const activityStore = useContext(ActivityStore);
+  const rootStore = useContext(RootStoreContext);
   const {
-    activitiesByDate,
-    deleteActivity,
-    targetButton,
-    submitting
-  } = activityStore;
+    activitiesByDate
+  } = rootStore.activityStore;
   return (
     <Fragment>
       {activitiesByDate.map(([group, activities]) => (
