@@ -1,14 +1,121 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Domain;
+using Microsoft.AspNetCore.Identity;
 
 namespace Persistence
 {
     public class Seed
     {
-        public static void SeedData(DataContext context)
+        public static async Task SeedData(DataContext context, UserManager<AppUser> userManager)
         {
+
+            if(!userManager.Users.Any())
+            {
+                var users = new List<AppUser>
+                {
+                    new AppUser
+                    {
+                        DisplayName = "Bob",
+                        UserName = "bob",
+                        Email = "bob@test.com"
+                    },
+                    new AppUser
+                    {
+                        DisplayName = "Tom",
+                        UserName = "tom",
+                        Email = "tom@test.com"
+                    },
+                    new AppUser
+                    {
+                        DisplayName = "Jane",
+                        UserName = "jane",
+                        Email = "jane@test.com"
+                    }
+                };
+
+                foreach(var user in users)
+                {
+                   await userManager.CreateAsync(user, "Pa$$w0rd");
+                }
+
+            }
+
+            // if(!context.Departmanlar.Any()){
+            //     var departmanlar = new List<Departman>
+            //     {
+            //         new Departman {
+            //             Id = 1,
+            //             DepartmanIsmi = "IT"
+            //         },
+            //         new Departman {
+            //             Id = 2,
+            //             DepartmanIsmi = "Yazılım"
+            //         },
+            //         new Departman {
+            //             Id = 3,
+            //             DepartmanIsmi = "İnsan Kaynakları"
+            //         },
+            //         new Departman {
+            //             Id = 4,
+            //             DepartmanIsmi = "Satış ve Pazarlama"
+            //         },
+            //         new Departman {
+            //             Id = 5,
+            //             DepartmanIsmi = "İş Geliştirme"
+            //         }
+            //     };
+
+            //     context.AddRange(departmanlar);
+            //     context.SaveChanges();
+            // }
+
+            // if(!context.Employees.Any()){
+            //     var employees = new List<Employee>
+            //     {
+            //         new Employee
+            //         {
+            //             Ad = "Ali",
+            //             Soyad = "Melek",
+            //             Telno = "05212121212",
+            //             DepartmanRefId = 1,
+            //             Departman = new Departman(){
+            //                 Id = 1
+            //             },
+            //             Yoneticisi = null
+
+            //         },
+            //         new Employee
+            //         {
+            //             Ad = "Veli",
+            //             Soyad = "Melek",
+            //             Telno = "05212121212",
+            //             DepartmanRefId = 2,
+            //             Departman = new Departman(){
+            //                 Id = 2
+            //             },
+            //             Yoneticisi = null
+
+            //         },
+            //         new Employee
+            //         {
+            //             Ad = "Celal",
+            //             Soyad = "Melek",
+            //             Telno = "05212121212",
+            //             DepartmanRefId = 3,
+            //             Departman = new Departman(){
+            //                 Id = 3
+            //             },
+            //             Yoneticisi = null
+
+            //         }
+            //     };
+            //     context.AddRange(employees);
+            //     context.SaveChanges();
+            // }
+
             if(!context.Activities.Any())
             {
                 var activites = new List<Activity>

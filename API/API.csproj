@@ -1,13 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UserSecretsId>111cdb47-dec4-4370-a67b-0b4504491afc</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Application\Application.csproj"/>
-    <ProjectReference Include="..\Persistence\Persistence.csproj"/>
+    <ProjectReference Include="..\Application\Application.csproj" />
+    <ProjectReference Include="..\Persistence\Persistence.csproj" />
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.1"/>
-    <PackageReference Include="FluentValidation.AspNetCore" Version="8.5.1"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.1" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="8.5.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.0.0" />
   </ItemGroup>
 </Project>
