@@ -4,15 +4,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Persistence
 {
-    public class DataContext:IdentityDbContext<AppUser>
+    public class DataContext : IdentityDbContext<AppUser>
     {
-        public DataContext(DbContextOptions options):base(options)
+        public DataContext(DbContextOptions options) : base(options)
         {
 
         }
-        public DbSet<Value> Values {get;set;}
+        public DbSet<Value> Values { get; set; }
 
-        public DbSet<Activity> Activities {get;set;}
+        public DbSet<Activity> Activities { get; set; }
+
+        public DbSet<UserActivity> UserActivities { get; set; }
 
         // public DbSet<Employee> Employees {get;set;}
 
@@ -21,12 +23,24 @@ namespace Persistence
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            
+
             builder.Entity<Value>().HasData(
-                new Value(){Id=1, Name="Value1"},
-                new Value(){Id=2, Name="Value2"},
-                new Value(){Id=3, Name="Value322"}
+                new Value() { Id = 1, Name = "Value1" },
+                new Value() { Id = 2, Name = "Value2" },
+                new Value() { Id = 3, Name = "Value322" }
             );
+
+            builder.Entity<UserActivity>(x => x.HasKey(ua => new { ua.AppUserId, ua.ActivityId }));
+
+            builder.Entity<UserActivity>()
+            .HasOne(u => u.AppUser)
+            .WithMany(u => u.UserActivities)
+            .HasForeignKey(u => u.AppUserId);
+
+            builder.Entity<UserActivity>()
+            .HasOne(a => a.Activity)
+            .WithMany(a => a.UserActivities)
+            .HasForeignKey(a => a.ActivityId);
         }
     }
 }
