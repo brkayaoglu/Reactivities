@@ -19,6 +19,7 @@ export const ErrorMessage:React.FC<IProps> = ({error,text}) => {
                 ))}
             </Message.List>
         )}
+        {text && <Message.Content content={text}/> }
     </Message>
   );
 };

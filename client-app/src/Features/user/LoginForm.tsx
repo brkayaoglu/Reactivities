@@ -46,9 +46,10 @@ export const LoginForm = () => {
             placeholder="Password"
             type="password"
           />
-          {submitError && !dirtySinceLastSubmit && (
+          {submitError && (
             <ErrorMessage error={submitError} text='Invalid email or password' />
           )}
+          {submitError ? console.log("invalid"): " "}
           <Button
             disabled={(invalid && !dirtySinceLastSubmit) || pristine}
             loading={submitting}
