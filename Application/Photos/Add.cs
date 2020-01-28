@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,8 +33,19 @@ namespace Application.Photos
 
             public async Task<Photo> Handle(Command request, CancellationToken cancellationToken)
             {
-                if(request.File == null)
-                    Console.WriteLine(request);
+
+                
+                if (request.File == null)
+                {
+                    
+                    Console.WriteLine("'request.File.Length'");
+                    Console.WriteLine(request.File.ContentDisposition);
+                    Console.WriteLine(request.File.ContentType);
+                    Console.WriteLine(request.File.FileName);
+                    Console.WriteLine(request.File.Headers);
+                    Console.WriteLine(request.File.Length);
+                }
+
                 var photoUploadResult = _photoAccessor.AddPhoto(request.File);
 
                 var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUserName());
@@ -47,7 +59,7 @@ namespace Application.Photos
                 if (!user.Photos.Any(x => x.isMain))
                     photo.isMain = true;
 
-                user.Photos.Add(photo);           
+                user.Photos.Add(photo);
 
                 var success = await _context.SaveChangesAsync() > 0;
 

@@ -15,7 +15,7 @@ namespace Infrastructure.Photos
         {
             var acc = new Account
             (
-                "fakename",
+                config.Value.CloudName,
                 config.Value.ApiKey,
                 config.Value.ApiSecret
             );
@@ -27,7 +27,15 @@ namespace Infrastructure.Photos
         {
             var uploadResult = new ImageUploadResult();
 
-            
+
+            if (file != null)
+            {
+                Console.WriteLine(file.ContentDisposition);
+                Console.WriteLine(file.ContentType);
+                Console.WriteLine(file.FileName);
+                Console.WriteLine(file.Headers);
+                Console.WriteLine(file.Length);
+            }
             if (file.Length > 0)
             {
                 using (var stream = file.OpenReadStream())
@@ -49,6 +57,9 @@ namespace Infrastructure.Photos
                 PublicId = uploadResult.PublicId,
                 Url = uploadResult.SecureUri.AbsoluteUri
             };
+
+
+
         }
 
         public string DeletePhoto(string publicId)
