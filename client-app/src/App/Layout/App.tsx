@@ -1,6 +1,6 @@
 import React, { Fragment, useContext, useEffect } from "react"; //Fragments prevents siblings
 import { Container } from "semantic-ui-react";
-import { Navbar } from "../../Features/nav/Navbar";
+import  Navbar  from "../../Features/nav/Navbar";
 import ActivitiesDashboard from "../../Features/activities/dashboard/ActivitiesDashboard";
 import { observer } from "mobx-react-lite";
 import { HomePage } from "../../Features/home/HomePage";

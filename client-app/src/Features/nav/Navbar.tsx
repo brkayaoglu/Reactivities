@@ -1,12 +1,14 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Menu, Container, Button, Dropdown, Image } from "semantic-ui-react";
 import { NavLink, Link } from "react-router-dom";
 import { RootStoreContext } from "../../App/stores/rootStore";
+import { observer } from "mobx-react-lite";
 
-export const Navbar: React.FC = () => {
+const Navbar: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
   const { openCreateActivity } = rootStore.activityStore;
   const { user, logout } = rootStore.userStore;
+  
   return (
     <Menu fixed="top" inverted>
       <Container>
@@ -48,3 +50,5 @@ export const Navbar: React.FC = () => {
     </Menu>
   );
 };
+
+export default observer(Navbar);
