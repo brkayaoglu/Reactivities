@@ -2,8 +2,9 @@ import React from 'react'
 import { Segment, Grid, Icon } from 'semantic-ui-react'
 import { IActivity } from '../../../App/models/activity'
 import {format} from 'date-fns'
+import { observer } from 'mobx-react-lite'
 
-export const ActivityDetailedInfo:React.FC<{activity:IActivity}> = ({activity}) => {
+const ActivityDetailedInfo:React.FC<{activity:IActivity}> = ({activity}) => {
     return (
         <Segment.Group>
               <Segment attached='top'>
@@ -41,3 +42,5 @@ export const ActivityDetailedInfo:React.FC<{activity:IActivity}> = ({activity}) 
             </Segment.Group>
     )
 }
+
+export default observer(ActivityDetailedInfo);
