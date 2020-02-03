@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { Menu, Container, Button, Dropdown, Image } from "semantic-ui-react";
 import { NavLink, Link } from "react-router-dom";
 import { RootStoreContext } from "../../App/stores/rootStore";
