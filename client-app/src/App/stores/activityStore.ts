@@ -1,4 +1,4 @@
-import { observable, action, computed, runInAction } from "mobx";
+import { observable, action, computed, runInAction, reaction } from "mobx";
 import { SyntheticEvent } from "react";
 import { IActivity } from "../models/activity";
 import agent from "../api/agent";
@@ -11,10 +11,21 @@ import {
   HubConnectionBuilder,
   LogLevel
 } from "@microsoft/signalr";
+
+const LIMIT = 2;
 export default class ActivityStore {
   rootStore: RootStore;
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
+
+    reaction(
+      () => this.predicate.keys(),
+      () => {
+        this.page = 0;
+        this.activitiesRegistry.clear();
+        this.loadActivities();
+      }
+    )
   }
 
   @observable activitiesRegistry = new Map(); // new activities array form
@@ -30,6 +41,42 @@ export default class ActivityStore {
   @observable loading = false;
 
   @observable.ref hubConnection: HubConnection | null = null;
+
+  @observable activityCount = 0;
+
+  @observable page = 0;
+
+  @observable predicate = new Map();
+
+  @action setPredicate = (predicate:string, value:string |Date) => {
+    this.predicate.clear();
+    if(predicate !== 'all')
+    {
+      this.predicate.set(predicate, value);
+    }
+  }
+
+  @computed get axiosParams(){
+    const params = new URLSearchParams();
+    params.append('limit', String(LIMIT));
+    params.append('offset', `${this.page ? this.page * LIMIT : 0}`);
+    this.predicate.forEach((value,key) => {
+      if(key ==='startDate'){
+        params.append(key, value.toISOString())
+      }else{
+        params.append(key,value)
+      }
+    })
+    return params;
+  }
+
+  @computed get totalPages() {
+    return Math.ceil(this.activityCount / LIMIT);
+  }
+
+  @action setPage = (page:number) => {
+    this.page = page;
+  }
 
   @action createHubConnection = (activityId: string) => {
     this.hubConnection = new HubConnectionBuilder()
@@ -107,12 +154,14 @@ export default class ActivityStore {
   @action loadActivities = async () => {
     this.initialLoad = true;
     try {
-      const activities = await agent.Activities.list();
+      const activitiesEnvelope = await agent.Activities.list(this.axiosParams);
+      const {activities, activityCount} = activitiesEnvelope;
       runInAction("load activities", () => {
         activities.forEach(activity => {
           activity = setActivityProps(activity, this.rootStore.userStore.user!);
           this.activitiesRegistry.set(activity.id, activity);
         });
+        this.activityCount = activityCount;
         this.initialLoad = false;
       });
       //console.log(this.groupActivitiesByDate(activities));
